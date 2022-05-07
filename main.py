@@ -1,4 +1,4 @@
-import pyfiglet, os
+import pyfiglet, os, re
 from colorama import Fore, init
 from multiprocessing.dummy import Pool as ThreadPool
 import requests as req
@@ -34,9 +34,10 @@ def CpanelChecker(domain):
 
 if __name__=="__main__":
     __banner__()
-    input_list = open(input(f"{cyan}[{white}?{cyan}] {white}Domain List : ")).read().replace("http://", "").replace("https://", "").splitlines()
+    input_list = open(input(f"{cyan}[{white}?{cyan}] {white}Domain List : ")).read().replace("http://", "").replace("https://", "")
+    domain_fixer = re.findall(r'(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-]{,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}', input_list)
     Thread = input(f"{cyan}[{white}?{cyan}] {white}Thread : ")
     pool = ThreadPool(int(Thread))
-    pool.map(CpanelChecker, input_list)
+    pool.map(CpanelChecker, domain_fixer)
     pool.close()
     pool.join()
